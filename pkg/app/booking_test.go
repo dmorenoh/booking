@@ -51,8 +51,8 @@ func TestSeatingManager_Arrives(t *testing.T) {
 		})
 
 		t.Run("When a group arrives and enough seats for them", func(t *testing.T) {
-			newGroup := NewGroup(4)
-			seatManager.Arrives(newGroup)
+			groupFor4People := NewGroup(4)
+			seatManager.Arrives(groupFor4People)
 
 			t.Run("Then group goes to waiting queue", func(t *testing.T) {
 				waitingGroups := seatManager.GetWaitingGroups()
@@ -62,14 +62,35 @@ func TestSeatingManager_Arrives(t *testing.T) {
 				assert.Len(t, bookings, 2)
 				var storedBooking *Booking
 				for _, booking := range bookings {
-					if booking.groupID == newGroup.id {
+					if booking.groupID == groupFor4People.id {
 						storedBooking = booking
 					}
 				}
 				assert.NotNil(t, storedBooking)
-				assert.Equal(t, storedBooking.groupID, newGroup.id)
+				assert.Equal(t, storedBooking.groupID, groupFor4People.id)
 				assert.Equal(t, storedBooking.tableID, tableFor4.id)
 			})
+
+			t.Run("When locating group", func(t *testing.T) {
+				tableFound, err := seatManager.Locate(groupFor4People.id)
+				require.NoError(t, err)
+
+				t.Run("Then return table assigned for that group", func(t *testing.T) {
+					assert.Equal(t, tableFound.id, tableFor4.id)
+				})
+			})
+
+			t.Run("When group leaves", func(t *testing.T) {
+				err := seatManager.Leaves(groupFor4People.id)
+				require.NoError(t, err)
+
+				t.Run("Then return table assigned for that group", func(t *testing.T) {
+					tableFound, err2 := seatManager.Locate(groupFor4People.id)
+					assert.NoError(t, err2)
+					assert.Equal(t, tableFound.availableSeats, tableFound.capacity)
+				})
+			})
 		})
+
 	})
 }
