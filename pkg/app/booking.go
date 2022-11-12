@@ -81,7 +81,7 @@ func (m *seatingManager) Leaves(groupID uuid.UUID) error {
 	}
 
 	if releaseErr := table.Release(group.seats); releaseErr != nil {
-		return fmt.Errorf("cannot relase seats left for %v in table %v", group.id, table.id)
+		return fmt.Errorf("cannot release seats left for %v in table %v", group.id, table.id)
 	}
 
 	return nil
