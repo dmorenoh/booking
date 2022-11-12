@@ -76,3 +76,4 @@ All test cases are found on ``booking_test.go``
 - Solution works but is not scalable enough. Why? It locks the resource for every ``Arrives(...)``. As this function implies multiple writes operation
 it could take longer. 
 - Error handling is missed.
+- Removing queued groups missed.
