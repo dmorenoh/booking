@@ -39,6 +39,27 @@ func (m *seatingManager) Arrives(newGroup *Group) {
 	m.booking = append(m.booking, booking)
 }
 ```
+This is the core part where trying to get the most convenient available table regarding a group of people.
+```go
+func (a *AvailableTables) Pickup(desiredSeats Seats) uuid.UUID {
+	a.RLock()
+	defer a.RUnlock()
+
+	for seats := desiredSeats; seats <= maxSeats; seats++ {
+		tables, ok := a.seatsMap[seats]
+		// seats' number not found in tables available list, continue
+		if !ok || len(tables) == 0 {
+			continue
+		}
+		tableID := tables[0]
+		// remove found table from available table lists
+		a.seatsMap[seats] = tables[1:]
+
+		return tableID
+	}
+	return uuid.Nil
+}
+```
 
 ## Leaves operation
 It manages groups leaving action. It also implies to release occupied seats-table by this group.

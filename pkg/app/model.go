@@ -142,8 +142,6 @@ type AvailableTables struct {
 	seatsMap map[Seats][]uuid.UUID
 }
 
-//type AvailableTables map[Seats][]uuid.UUID
-
 func (a *AvailableTables) Pickup(desiredSeats Seats) uuid.UUID {
 	a.RLock()
 	defer a.RUnlock()
