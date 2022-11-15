@@ -143,8 +143,8 @@ type AvailableTables struct {
 }
 
 func (a *AvailableTables) Pickup(desiredSeats Seats) uuid.UUID {
-	a.RLock()
-	defer a.RUnlock()
+	a.Lock()
+	defer a.Unlock()
 
 	for seats := desiredSeats; seats <= maxSeats; seats++ {
 		tables, ok := a.seatsMap[seats]

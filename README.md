@@ -42,8 +42,9 @@ func (m *seatingManager) Arrives(newGroup *Group) {
 This is the core part where trying to get the most convenient available table regarding a group of people.
 ```go
 func (a *AvailableTables) Pickup(desiredSeats Seats) uuid.UUID {
-	a.RLock()
-	defer a.RUnlock()
+    // for managing concurrency as available table collection is shared
+	a.Lock()
+    defer a.Unlock()
 
 	for seats := desiredSeats; seats <= maxSeats; seats++ {
 		tables, ok := a.seatsMap[seats]
