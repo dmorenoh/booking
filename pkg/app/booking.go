@@ -26,7 +26,7 @@ type seatingManager struct {
 	// key: available seats number.
 	// value: table IDs having that number of available seats.
 	//availableTables map[Seats][]uuid.UUID
-
+	//this is the same as above
 	availableTables *AvailableTables
 	waitingQueue    []*Group
 	booking         []*Booking
